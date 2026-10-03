@@ -13,28 +13,28 @@ interface Props {
 
 export default function ArchiveControls({ items, onFilter, onSearch, onRandom, active }: Props) {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight">WHAT DOES YOUR AI LOOK LIKE?</h2>
-          <p className="mt-3 text-sm">Ask your AI to vibe face themselves.</p>
+    <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-[42rem]">
+          <h2 className="text-xl font-semibold tracking-[-0.04em] leading-[1.05] sm:text-2xl">
+            WHAT DOES YOUR AI LOOK LIKE?
+          </h2>
+          <p className="mt-3 text-xs sm:text-sm">Ask your AI to vibe face themselves.</p>
           {/* Removed per request: single-line archive description */}
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <input
-              aria-label="Search archive"
-              placeholder="Search name, number, description"
-              onChange={(e) => onSearch(e.target.value)}
-              className="border thin-border px-3 py-2 text-xs min-w-[calc(34ch+30px)] relative -top-[66px]"
-            />
-            <a href="mailto:vibefacing@ganderlink.com" className="mt-[78px] text-sm muted">
-              Have an AI image to add?
-              <br />
-              <strong className="underline">vibefacing@ganderlink.com</strong>
-            </a>
-          </div>
-          {/* RANDOM button hidden temporarily per request; handler left intact */}
+
+        <div className="flex w-full max-w-[27rem] flex-col gap-3 sm:w-auto">
+          <input
+            aria-label="Search archive"
+            placeholder="Search name, number, description"
+            onChange={(e) => onSearch(e.target.value)}
+            className="w-full border thin-border px-3 py-2 text-xs"
+          />
+          <a href="mailto:vibefacing@ganderlink.com" className="text-xs leading-relaxed muted sm:text-sm">
+            Have an AI image to add?
+            <br className="hidden sm:block" />
+            <strong className="underline">vibefacing@ganderlink.com</strong>
+          </a>
         </div>
       </div>
 

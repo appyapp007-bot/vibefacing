@@ -1,69 +1,130 @@
-import Image from "next/image";
+"use client";
+import React, { useEffect, useMemo, useState } from "react";
+import SiteHeader from "../components/SiteHeader";
+import ArchiveControls from "../components/ArchiveControls";
+import ArchiveGrid from "../components/ArchiveGrid";
+import MOCK_DATA from "../lib/mock-data";
+import type { Submission } from "../lib/types";
+import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("ALL");
+  const router = useRouter();
+
+  const [rawItems, setRawItems] = useState<Submission[]>(MOCK_DATA.items);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  // Fetch archive entries from Supabase on mount. Keep MOCK_DATA as a fallback.
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      setLoadError(null);
+      try {
+        const { data, error } = await supabase
+          .from("archive_entries")
+          .select("*")
+          .order("archive_number", { ascending: false });
+
+        if (error) throw error;
+
+        if (!mounted) return;
+
+        if (!data) {
+          setRawItems(MOCK_DATA.items);
+        } else {
+          // Map rows to Submission shape and ensure id is zero-padded 4-digit string
+          const mapped = data.map((r: any) => {
+            const idNum = r.archive_number ?? r.archiveNumber ?? r.id;
+            const idStr = String(idNum ?? "").padStart(4, "0");
+            const submission: Submission = {
+              id: idStr,
+              name: r.name ?? undefined,
+              category: (r.category ?? "OTHER") as any,
+              location: r.location ?? undefined,
+              personality: r.personality ?? undefined,
+              model: r.model ?? undefined,
+              submittedBy: r.submitted_by ?? r.submittedBy ?? undefined,
+              quote: r.ai_says ?? undefined,
+              humanSays: r.human_says ?? undefined,
+              extraDetails: r.extra_details ?? undefined,
+              image: r.image ?? "",
+            };
+            return submission;
+          });
+          setRawItems(mapped);
+        }
+      } catch (err: any) {
+        // On error, fall back to MOCK_DATA but record the error for diagnostics
+        console.error("Failed to load archive from Supabase:", err?.message ?? err);
+        setLoadError(String(err?.message ?? err));
+        setRawItems(MOCK_DATA.items);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const items = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const digits = q.replace(/[^0-9]/g, "");
+    return rawItems.filter((it) => {
+      if (filter !== "ALL" && it.category !== filter) return false;
+      if (!q) return true;
+      // Match archive number queries like "23", "0023", or "#0023"
+      if (digits) {
+        const n = Number(digits);
+        if (!Number.isNaN(n) && Number(it.id) === n) return true;
+      }
+
+      return (
+        (it.name ?? "").toLowerCase().includes(q) ||
+        (it.personality ?? "").toLowerCase().includes(q) ||
+        (it.model ?? "").toLowerCase().includes(q) ||
+        (it.location ?? "").toLowerCase().includes(q) ||
+        (it.extraDetails ?? "").toLowerCase().includes(q) ||
+        (it.humanSays ?? "").toLowerCase().includes(q) ||
+        (it.quote ?? "").toLowerCase().includes(q) ||
+        (it.submittedBy ?? "").toLowerCase().includes(q) ||
+        (it.category ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [query, filter, rawItems]);
+
+  const handleRandom = () => {
+    const list = rawItems;
+    if (list.length === 0) return;
+    const pick = list[Math.floor(Math.random() * list.length)];
+    // Navigate to an existing entry id
+    router.push(`/v/${pick.id}`);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen">
+      <SiteHeader />
+      <main>
+        <ArchiveControls
+          items={rawItems}
+          onFilter={(c) => setFilter(c)}
+          onSearch={(q) => setQuery(q)}
+          onRandom={handleRandom}
+          active={filter}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <ArchiveGrid items={items as Submission[]} />
+        {/* Screen-reader-only status for load errors (keeps UI unchanged) */}
+        <div aria-live="polite" className="sr-only">
+          {loading ? "Loading archive entries" : loadError ? `Archive load error: ${loadError}` : "Archive loaded"}
         </div>
       </main>
+      <footer />
     </div>
   );
 }

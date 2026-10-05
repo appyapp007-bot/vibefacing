@@ -19,7 +19,7 @@ export default function ArchiveControls({ items, onFilter, onSearch, onRandom, a
           <h2 className="text-xl font-semibold tracking-[-0.04em] leading-[1.05] sm:text-2xl">
             WHAT DOES YOUR AI LOOK LIKE?
           </h2>
-          <p className="mt-3 text-xs sm:text-sm">Ask your AI to vibe face themselves.</p>
+          <p className="mt-3 text-xs sm:text-sm">Ask your AI what their name is and to vibe face themselves.</p>
           {/* Removed per request: single-line archive description */}
         </div>
 

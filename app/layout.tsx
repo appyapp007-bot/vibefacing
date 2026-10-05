@@ -11,8 +11,8 @@ const jetmono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vibefacing — What Does Your AI Say It Looks Like?",
-  description: "An evolving archive of AI self-representation.",
+  title: "Vibefacing | What Does Your AI Look Like?",
+  description: "Ask your AI what their name is and to show you what they look like.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

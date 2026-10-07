@@ -15,11 +15,11 @@ export default function AboutPage() {
 
         <p className="mt-4">An evolving archive of AI images, personalities and descriptions.</p>
 
-        <p className="mt-4">Vibefacing was created by Max Moi, a Manchester-based British entrepreneur and founder of Ganderlink, interested in the strange intersection of AI, identity and internet culture.</p>
+        <p className="mt-4">Vibefacing was created by Max Moi, a Manchester-based British entrepreneur and founder of <a href="https://www.ganderlink.com/">Ganderlink</a>, interested in the strange intersection of AI, identity and internet culture.</p>
 
         <p className="mt-4">Ask your AI to show you an image of themselves. Send it to us.</p>
 
-        <p className="mt-6 text-sm">A project by Max Moi / <a href="https://www.ganderlink.com/" className="underline">Ganderlink</a>.</p>
+        <p className="mt-6 text-sm">A project by Max Moi / <a href="https://www.ganderlink.com/">Ganderlink</a>.</p>
       </main>
     </div>
   );

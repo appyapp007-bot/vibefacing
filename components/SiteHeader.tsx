@@ -9,7 +9,8 @@ export default function SiteHeader() {
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-6">
             <Link
               href="/"
-              className="text-[10px] font-semibold tracking-[0.28em] text-foreground whitespace-nowrap leading-none sm:text-sm sm:tracking-[0.35em]"
+              aria-label="Vibefacing home"
+              className="inline-block text-[11px] font-semibold tracking-[0.32em] text-foreground whitespace-nowrap leading-none transition-opacity duration-150 hover:opacity-80 sm:text-[14px] sm:tracking-[0.38em]"
             >
               V I B E F A C I N G
             </Link>

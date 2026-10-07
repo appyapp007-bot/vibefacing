@@ -9,6 +9,7 @@ interface Props {
 
 export default function ArchiveGrid({ items }: Props) {
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   function toggle(id: string) {
     setOpenIds((s) => ({ ...s, [id]: !s[id] }));
@@ -23,12 +24,27 @@ export default function ArchiveGrid({ items }: Props) {
     return typeof src === "string" && src.toLowerCase().endsWith(".svg");
   }
 
+  function closeLightbox() {
+    setSelectedImage(null);
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
         {items.map((it) => (
           <article key={it.id} className="group">
-            <div className="aspect-[4/5] w-full overflow-hidden thin-border">
+            <div
+              className="aspect-[4/5] w-full overflow-hidden thin-border cursor-pointer"
+              onClick={() => setSelectedImage(it.image)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setSelectedImage(it.image);
+                }
+              }}
+            >
               {isSvg(it.image) ? (
                 <img src={it.image} alt={`Vibeface ${it.name ?? "entry"}`} className="object-cover w-full h-full" />
               ) : (
@@ -126,6 +142,31 @@ export default function ArchiveGrid({ items }: Props) {
           </article>
         ))}
       </div>
+
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-8"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative max-h-[90vh] max-w-[90vw]" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              aria-label="Close image"
+              onClick={closeLightbox}
+              className="absolute -top-3 -right-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 bg-black/70 text-lg text-white"
+            >
+              ×
+            </button>
+            {isSvg(selectedImage) ? (
+              <img src={selectedImage} alt="Vibeface detail" className="max-h-[90vh] max-w-[90vw] object-contain" />
+            ) : (
+              <Image src={selectedImage} alt="Vibeface detail" width={1200} height={1500} className="max-h-[90vh] max-w-[90vw] object-contain" />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

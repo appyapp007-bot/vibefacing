@@ -22,7 +22,7 @@ export default function ArchiveControls({ items, onFilter, onSearch, onRandom, a
           <p className="mt-3 text-xs sm:text-sm">
   Ask your AI what their name is, what they look like, and to vibe face themselves.
   <br />
-  Don't forget to ask your AI what they think you look like! 😉
+  You could even ask your AI what they think you look like! 😉
 </p>
           {/* Removed per request: single-line archive description */}
         </div>

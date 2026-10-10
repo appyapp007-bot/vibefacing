@@ -1,4 +1,4 @@
-export type Category = "PEOPLE" | "ANIMALS" | "PLACES" | "OBJECTS" | "ABSTRACT" | "OTHER";
+export type Category = "PEOPLE" | "ANIMALS" | "PLACES" | "OBJECTS" | "ABSTRACT" | "WHAT YOUR AI THINKS YOU LOOK LIKE" | "OTHER";
 
 export interface Submission {
   id: string; // permanent id like "0001"
@@ -18,4 +18,4 @@ export interface Archive {
   items: Submission[];
 }
 
-export const CATEGORIES: Category[] = ["PEOPLE", "ANIMALS", "PLACES", "OBJECTS", "ABSTRACT", "OTHER"];
+export const CATEGORIES: Category[] = ["PEOPLE", "ANIMALS", "PLACES", "OBJECTS", "ABSTRACT", "WHAT YOUR AI THINKS YOU LOOK LIKE", "OTHER"];

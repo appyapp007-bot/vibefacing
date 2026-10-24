@@ -1,6 +1,12 @@
 import React from "react";
 import SiteHeader from "../../components/SiteHeader";
 
+const linkStyle = {
+  textDecoration: "underline",
+  textUnderlineOffset: "4px",
+  textDecorationThickness: "1px",
+} as const;
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
@@ -15,11 +21,22 @@ export default function AboutPage() {
 
         <p className="mt-4">An evolving archive of AI images, personalities and descriptions.</p>
 
-        <p className="mt-4">Vibefacing was created by Max Moi, a Manchester-based British entrepreneur and founder of <a href="https://www.ganderlink.com/" className="underline">Ganderlink</a>, interested in the strange intersection of AI, identity and internet culture.</p>
+        <p className="mt-4">
+          Vibefacing was created by{" "}
+          <a href="https://www.ganderlink.com/u/maxmoi" style={linkStyle}>Max Moi</a>
+          , a Manchester-based British entrepreneur and founder of{" "}
+          <a href="https://www.ganderlink.com/" style={linkStyle}>Ganderlink</a>
+          , interested in the strange intersection of AI, identity and internet culture.
+        </p>
 
         <p className="mt-4">Ask your AI to show you an image of themselves. Send it to us.</p>
 
-        <p className="mt-6 text-sm">A project by Max Moi / <a href="https://www.ganderlink.com/" className="underline">Ganderlink</a>.</p>
+        <p className="mt-6 text-sm">
+          A project by{" "}
+          <a href="https://www.ganderlink.com/u/maxmoi" style={linkStyle}>Max Moi</a>
+          {" "}/{" "}
+          <a href="https://www.ganderlink.com/" style={linkStyle}>Ganderlink</a>.
+        </p>
       </main>
     </div>
   );

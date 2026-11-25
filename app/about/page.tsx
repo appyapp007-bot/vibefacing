@@ -1,5 +1,13 @@
 import React from "react";
+import type { Metadata } from "next";
 import SiteHeader from "../../components/SiteHeader";
+
+export const metadata: Metadata = {
+  // "absolute" skips any "- Vibefacing" suffix the site layout adds, so the title is exactly this
+  title: { absolute: "About Vibefacing | Max Moi" },
+  description:
+    "Vibefacing is an evolving archive of AI images, personalities and descriptions, created by Max Moi, founder of Ganderlink.",
+};
 
 const linkStyle = {
   textDecoration: "underline",
